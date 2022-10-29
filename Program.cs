@@ -272,7 +272,10 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-//chiedere all'utente una stringa, chiedere all'utente un chiave (numerica) che possa realizzare un CIFRATORE / DECIFRATORE del CIFRARIO DI CESARE:
+//Realizzare un programma in grado di CRIPTARE e DECRIPTARE una stringa inserita nell’utente con la strategia di criptazione nota come “IL CIFRARIO DI CESARE”
+//Mi raccomando ci sono diversi modi di integrarlo, scegliete una strategia semplice in base a quello che abbiamo spiegato:
+//l’utente inserisce una stringa da criptare / decriptare
+//l’utente inserisce una chiave numerica per effettuare la criptazione / decriptazione della stringa inserita.
 
 Console.WriteLine("scrivi una frase");
 
@@ -282,91 +285,125 @@ Console.WriteLine("inserisci una chiave numerica così che io possa codificare l
 
 int userKey = Convert.ToInt32(Console.ReadLine());
 
-Console.Write($"string after encoding: {GetEncodedString(userString, userKey)}");
+Console.Write($"string after encoding: {CeasarEncode(userString, userKey)}");
+Console.Write($"string after decoding: {CeasarDecode(CeasarEncode(userString, userKey), userKey)}");
 
-string GetEncodedString(string stringToEncode, int key)
+
+string CeasarEncode(string stringToEncode, int key)
 {
-    char[] alphabeticalArray = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+    char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-    char[] specialCharsArray = { ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~' };
+    char[] specialChars = { ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~' };
 
-    char userChar = ' ';
+    char[] numbers = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
 
     string encodedString = "";
 
     for (int i = 0; i < stringToEncode.Length; i++)
     {
-        userChar = stringToEncode[i];
+        char userChar = stringToEncode[i];
 
-        int isLongerCounter = key;
+        int shift = key;
 
-        for (int j = 0; j < alphabeticalArray.Length; j++)
+        for (int j = 0; j < alphabet.Length; j++)
         {
-            if (alphabeticalArray[j] == userChar && j + key < alphabeticalArray.Length - 1)
+            if (alphabet[j] == userChar && (j + shift) < alphabet.Length - 1)
             {
-                userChar = alphabeticalArray[j + key];
+                userChar = alphabet[j + shift];
                 break;
             }
-            else if(alphabeticalArray[j] == userChar && j + key > alphabeticalArray.Length - 1)
+            else if(alphabet[j] == userChar && j + key > alphabet.Length - 1)
             {
-                isLongerCounter -= alphabeticalArray.Length - j;
+                shift -= alphabet.Length - j;
 
-                for (int k = 0; k < alphabeticalArray.Length;)
+                for (int k = 0; k < alphabet.Length;)
                 {
-                    if(isLongerCounter > alphabeticalArray.Length)
+                    if(shift > alphabet.Length)
                     {
-                        isLongerCounter -= alphabeticalArray.Length;
-                        
+                        shift -= alphabet.Length;
                     }
                     else
                     {
                         k++;
 
-                        if(k == isLongerCounter)
+                        if(k == shift)
                         {
-                            userChar = alphabeticalArray[k];
+                            userChar = alphabet[k];
+                            break;
                         }
                     }
                 }
 
                 break;
             }
-            else if(alphabeticalArray[j] != userChar && j == alphabeticalArray.Length - 1)
+            else if (j == alphabet.Length - 1)
             {
-                for (int y = 0; y < specialCharsArray.Length; y++)
+                for (int y = 0; y < specialChars.Length; y++)
                 {
-                    if (specialCharsArray[y] == userChar && y + key < specialCharsArray.Length - 1)
+                    if (specialChars[y] == userChar && y + key < specialChars.Length - 1)
                     {
-                        userChar = specialCharsArray[y + key];
+                        userChar = specialChars[y + key];
                         break;
                     }
-                    else if (specialCharsArray[y] == userChar && y + key > specialCharsArray.Length - 1)
+                    else if (specialChars[y] == userChar && y + key > specialChars.Length - 1)
                     {
-                        isLongerCounter -= specialCharsArray.Length - y;
+                        shift -= specialChars.Length - y;
 
-                        for (int k = 0; k < specialCharsArray.Length;)
+                        for (int k = 0; k < specialChars.Length;)
                         {
-                            if (isLongerCounter > specialCharsArray.Length)
+                            if (shift > specialChars.Length)
                             {
-                                isLongerCounter -= specialCharsArray.Length;
+                                shift -= specialChars.Length;
                             }
                             else
                             {
                                 k++;
 
-                                if (k == isLongerCounter)
+                                if (k == shift)
                                 {
-                                    userChar = specialCharsArray[k];
+                                    userChar = specialChars[k];
+                                    break;
                                 }
                             }
                         }
-
-                        break;
                     }
-                    else if(specialCharsArray[y] != userChar && y == specialCharsArray.Length - 1)
+                    else if (y == specialChars.Length - 1)
                     {
-                        userChar = 'x';
-                        break;
+                        for (int z = 0; z < numbers.Length; z++)
+                        {
+                            if (numbers[z] == userChar && z + key < numbers.Length - 1)
+                            {
+                                userChar = numbers[z + key];
+                                break;
+                            }
+                            else if (numbers[z] == userChar && z + key > numbers.Length - 1)
+                            {
+                                shift -= numbers.Length - y;
+
+                                for (int k = 0; k < numbers.Length;)
+                                {
+                                    if (shift > numbers.Length)
+                                    {
+                                        shift -= numbers.Length;
+                                    }
+                                    else
+                                    {
+                                        k++;
+
+                                        if (k == shift)
+                                        {
+                                            userChar = numbers[k];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (z == numbers.Length - 1)
+                            {
+                                userChar = 'x';
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -376,4 +413,130 @@ string GetEncodedString(string stringToEncode, int key)
     }
 
     return encodedString;
+}
+
+string CeasarDecode(string stringToDecode, int key)
+{
+    char[] alphabet = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
+    char[] specialChars = { ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~' };
+
+    char[] numbers = { '1', '2', '3', '4', '5', '6', '7', '8', '9', '0' };
+
+    string decodedString = "";
+
+    for (int i = 0; i < stringToDecode.Length; i++)
+    {
+        char userChar = stringToDecode[i];
+
+        int shift = key;
+
+        for (int j = 0; j < alphabet.Length; j++)
+        {
+            if (alphabet[j] == userChar && (j + shift) < alphabet.Length - 1)
+            {
+                userChar = alphabet[j + shift];
+                break;
+            }
+            else if (alphabet[j] == userChar && j + key > alphabet.Length - 1)
+            {
+                shift -= alphabet.Length - j;
+
+                for (int k = 0; k < alphabet.Length;)
+                {
+                    if (shift > alphabet.Length)
+                    {
+                        shift -= alphabet.Length;
+                    }
+                    else
+                    {
+                        k++;
+
+                        if (k == shift)
+                        {
+                            userChar = alphabet[k];
+                            break;
+                        }
+                    }
+                }
+
+                break;
+            }
+            else if (j == alphabet.Length - 1)
+            {
+                for (int y = 0; y < specialChars.Length; y++)
+                {
+                    if (specialChars[y] == userChar && y + key < specialChars.Length - 1)
+                    {
+                        userChar = specialChars[y + key];
+                        break;
+                    }
+                    else if (specialChars[y] == userChar && y + key > specialChars.Length - 1)
+                    {
+                        shift -= specialChars.Length - y;
+
+                        for (int k = 0; k < specialChars.Length;)
+                        {
+                            if (shift > specialChars.Length)
+                            {
+                                shift -= specialChars.Length;
+                            }
+                            else
+                            {
+                                k++;
+
+                                if (k == shift)
+                                {
+                                    userChar = specialChars[k];
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else if (y == specialChars.Length - 1)
+                    {
+                        for (int z = 0; z < numbers.Length; z++)
+                        {
+                            if (numbers[z] == userChar && z + key < numbers.Length - 1)
+                            {
+                                userChar = numbers[z + key];
+                                break;
+                            }
+                            else if (numbers[z] == userChar && z + key > numbers.Length - 1)
+                            {
+                                shift -= numbers.Length - y;
+
+                                for (int k = 0; k < numbers.Length;)
+                                {
+                                    if (shift > numbers.Length)
+                                    {
+                                        shift -= numbers.Length;
+                                    }
+                                    else
+                                    {
+                                        k++;
+
+                                        if (k == shift)
+                                        {
+                                            userChar = numbers[k];
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (z == numbers.Length - 1)
+                            {
+                                userChar = 'x';
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        decodedString += userChar;
+    }
+
+    return decodedString;
 }
