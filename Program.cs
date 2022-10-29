@@ -238,34 +238,142 @@
 
 //2 - La sequenza di fibonacci di un numero
 
-Console.WriteLine("scrivi un numero e ti dirò il risultato corrispondente in posizione da te scelta nella Sequenza di Fibonacci");
+//Console.WriteLine("scrivi un numero N e ti dirò il risultato corrispondente in posizione N nella Sequenza di Fibonacci");
 
-int userNumber = Convert.ToInt32(Console.ReadLine());
+//int userNumber = Convert.ToInt32(Console.ReadLine());
 
-int userFibonacciNumber = GetFibonacciSequenceNumber(userNumber);
+//int userFibonacciNumber = GetFibonacciSequenceNumber(userNumber);
 
-Console.WriteLine($"il numero presente nella Sequenza di Fibonacci in posizione {userNumber} è: {userFibonacciNumber}!");
+//Console.WriteLine($"il numero presente nella Sequenza di Fibonacci in posizione {userNumber} è: {userFibonacciNumber}!");
 
-int GetFibonacciSequenceNumber(int number)
+//int GetFibonacciSequenceNumber(int number)
+//{
+//    int fibonacciDefault = 1;
+
+//    int fibonacciNumber = 0;
+
+//    int[] fibonacciArray = new int[number];
+
+//    for (int i = 0; i < fibonacciArray.Length; i++)
+//    {
+//        if (i == 0 || i == 1)
+//        {
+//            fibonacciArray[i] = fibonacciDefault;
+//        }
+//        else
+//        {
+//            fibonacciNumber = fibonacciArray[i - 1] + fibonacciArray[i - 2];
+//            fibonacciArray[i] = fibonacciNumber;
+//        }
+//    }
+
+//    return fibonacciArray[fibonacciArray.Length - 1];
+//}
+
+/*------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+//chiedere all'utente una stringa, chiedere all'utente un chiave (numerica) che possa realizzare un CIFRATORE / DECIFRATORE del CIFRARIO DI CESARE:
+
+Console.WriteLine("scrivi una frase");
+
+string userString = Console.ReadLine().ToLower();
+
+Console.WriteLine("inserisci una chiave numerica così che io possa codificare la frase da te digitata");
+
+int userKey = Convert.ToInt32(Console.ReadLine());
+
+Console.Write($"string after encoding: {GetEncodedString(userString, userKey)}");
+
+string GetEncodedString(string stringToEncode, int key)
 {
-    int fibonacciDefault = 1;
+    char[] alphabeticalArray = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' };
 
-    int fibonacciNumber = 0;
+    char[] specialCharsArray = { ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~' };
 
-    int[] fibonacciArray = new int[number];
+    char userChar = ' ';
 
-    for (int i = 0; i < fibonacciArray.Length; i++)
+    string encodedString = "";
+
+    for (int i = 0; i < stringToEncode.Length; i++)
     {
-        if (i == 0 || i == 1)
+        userChar = stringToEncode[i];
+
+        int isLongerCounter = key;
+
+        for (int j = 0; j < alphabeticalArray.Length; j++)
         {
-            fibonacciArray[i] = fibonacciDefault;
+            if (alphabeticalArray[j] == userChar && j + key < alphabeticalArray.Length - 1)
+            {
+                userChar = alphabeticalArray[j + key];
+                break;
+            }
+            else if(alphabeticalArray[j] == userChar && j + key > alphabeticalArray.Length - 1)
+            {
+                isLongerCounter -= alphabeticalArray.Length - j;
+
+                for (int k = 0; k < alphabeticalArray.Length;)
+                {
+                    if(isLongerCounter > alphabeticalArray.Length)
+                    {
+                        isLongerCounter -= alphabeticalArray.Length;
+                        
+                    }
+                    else
+                    {
+                        k++;
+
+                        if(k == isLongerCounter)
+                        {
+                            userChar = alphabeticalArray[k];
+                        }
+                    }
+                }
+
+                break;
+            }
+            else if(alphabeticalArray[j] != userChar && j == alphabeticalArray.Length - 1)
+            {
+                for (int y = 0; y < specialCharsArray.Length; y++)
+                {
+                    if (specialCharsArray[y] == userChar && y + key < specialCharsArray.Length - 1)
+                    {
+                        userChar = specialCharsArray[y + key];
+                        break;
+                    }
+                    else if (specialCharsArray[y] == userChar && y + key > specialCharsArray.Length - 1)
+                    {
+                        isLongerCounter -= specialCharsArray.Length - y;
+
+                        for (int k = 0; k < specialCharsArray.Length;)
+                        {
+                            if (isLongerCounter > specialCharsArray.Length)
+                            {
+                                isLongerCounter -= specialCharsArray.Length;
+                            }
+                            else
+                            {
+                                k++;
+
+                                if (k == isLongerCounter)
+                                {
+                                    userChar = specialCharsArray[k];
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+                    else if(specialCharsArray[y] != userChar && y == specialCharsArray.Length - 1)
+                    {
+                        userChar = 'x';
+                        break;
+                    }
+                }
+            }
         }
-        else
-        {
-            fibonacciNumber = fibonacciArray[i - 1] + fibonacciArray[i - 2];
-            fibonacciArray[i] = fibonacciNumber;
-        }
+
+        encodedString += userChar;
     }
 
-    return fibonacciArray[fibonacciArray.Length - 1];
+    return encodedString;
 }
