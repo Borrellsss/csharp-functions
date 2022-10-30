@@ -277,21 +277,46 @@
 //l’utente inserisce una stringa da criptare / decriptare
 //l’utente inserisce una chiave numerica per effettuare la criptazione / decriptazione della stringa inserita.
 
-Console.WriteLine("scrivi una frase");
+Console.WriteLine("scrivi una frase:");
 
 string userString = Console.ReadLine().ToLower();
 
-Console.WriteLine("inserisci una chiave numerica così che io possa codificare la frase da te digitata");
+Console.WriteLine("inserisci una chiave numerica così che io possa criptare o decriptare la frase da te digitata:");
 
 int userKey = Convert.ToInt32(Console.ReadLine());
 
-string encodedString = CaesarCipherEncoder(userString, userKey);
-Console.WriteLine($"string after encoding: {encodedString}");
-Console.WriteLine();
+string encodedString = "";
 
-string decodedString = CaesarCipherDecoder(encodedString, userKey);
-Console.WriteLine($"string after decoding: {decodedString}");
-Console.WriteLine();
+string decodedString = "";
+
+bool response = true;
+
+while (response)
+{
+    Console.WriteLine("vuoi criptare o decriptare la tua stringa?");
+
+    string userAnswer = Console.ReadLine().ToLower();
+
+    if (userAnswer == "criptare")
+    {
+        encodedString = CaesarCipherEncoder(userString, userKey);
+        Console.WriteLine($"stringa criptata: {encodedString}");
+        Console.WriteLine();
+        response = false;
+    }
+    else if (userAnswer == "decriptare")
+    {
+        decodedString = CaesarCipherDecoder(userString, userKey);
+        Console.WriteLine($"stringa decriptata: {decodedString}");
+        Console.WriteLine();
+        response = false;
+    }
+    else
+    {
+        Console.WriteLine("la tua risposta non è valida!");
+    }
+
+}
 
 string CaesarCipherEncoder(string stringToEncode, int key)
 {
