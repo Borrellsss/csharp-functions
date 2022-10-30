@@ -285,8 +285,13 @@ Console.WriteLine("inserisci una chiave numerica così che io possa codificare l
 
 int userKey = Convert.ToInt32(Console.ReadLine());
 
-Console.Write($"string after encoding: {CaesarCipherEncoder(userString, userKey)}");
-Console.Write($"string after decoding: {CaesarCipherDecoder(CaesarCipherEncoder(userString, userKey), userKey)}");
+string encodedString = CaesarCipherEncoder(userString, userKey);
+Console.WriteLine($"string after encoding: {encodedString}");
+Console.WriteLine();
+
+string decodedString = CaesarCipherDecoder(encodedString, userKey);
+Console.WriteLine($"string after decoding: {decodedString}");
+Console.WriteLine();
 
 string CaesarCipherEncoder(string stringToEncode, int key)
 {
@@ -418,11 +423,6 @@ string CaesarCipherEncoder(string stringToEncode, int key)
                                     break;
                                 }
                             }
-                            else if (z == numbers.Length - 1)
-                            {
-                                Console.WriteLine("non è stato possibile codificare la tua stringa!");
-                                break;
-                            }
                         }
                     }
                 }
@@ -461,7 +461,7 @@ string CaesarCipherDecoder(string stringToDecode, int key)
                 {
                     counter = x;
 
-                    for (int j = counter; j <= 0;)
+                    for (int j = counter; j >= 0;)
                     {
                         if (shift != 0)
                         {
@@ -499,7 +499,7 @@ string CaesarCipherDecoder(string stringToDecode, int key)
                         {
                             counter = y;
 
-                            for (int j = counter; j <= 0;)
+                            for (int j = counter; j >= 0;)
                             {
                                 if (shift != 0)
                                 {
@@ -537,7 +537,7 @@ string CaesarCipherDecoder(string stringToDecode, int key)
                                 {
                                     counter = z;
 
-                                    for (int j = counter; j <= 0;)
+                                    for (int j = counter; j >= 0;)
                                     {
                                         if (shift != 0)
                                         {
@@ -564,11 +564,6 @@ string CaesarCipherDecoder(string stringToDecode, int key)
                                     encodedChar = numbers[z - shift];
                                     break;
                                 }
-                            }
-                            else if(z == numbers.Length - 1)
-                            {
-                                Console.WriteLine("non è stato possibile decodificare la tua stringa!");
-                                break;
                             }
                         }
                     }
